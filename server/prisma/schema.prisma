@@ -12,3 +12,22 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Services {
+  id              Int      @id @default(autoincrement())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  Sales           Sales?   @relation(fields: [salesId], references: [id])
+  salesId         Int?
+  serviceCategory String
+}
+
+model Sales {
+  id              Int        @id @default(autoincrement())
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  clientName      String
+  clientTinID     Int?
+  clientAddress   String
+  serviceProvided Services[]
+}
