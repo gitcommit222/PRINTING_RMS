@@ -1,16 +1,25 @@
 import express from "express";
-import { PrismaClient } from "@prisma/client";
+import prisma from "./prisma/prisma";
 
 const app = express();
 
 const PORT = process.env.PORT || 5001;
 
-const prisma = new PrismaClient();
-
 async function main() {
-	const sales = await prisma.sales.findMany();
-	console.log(sales);
+	try {
+		app.listen(PORT, () => {
+			console.log(`Server is running on port ${PORT}`);
+		});
+
+		await new Promise((resolve) => setTimeout(resolve, 100));
+	} catch (error) {
+		console.error("Failed to start the server:", error);
+		await prisma.$disconnect();
+		process.exit(1);
+	}
 }
+
+console.log("Gitlab")
 
 main()
 	.then(async () => {
@@ -21,7 +30,3 @@ main()
 		await prisma.$disconnect();
 		process.exit(1);
 	});
-
-app.listen(PORT, () => {
-	console.log(`Server running on port: ${PORT}`);
-});
